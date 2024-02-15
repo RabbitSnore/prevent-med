@@ -1,0 +1,69 @@
+---
+title: "PreventMED - Power Analysis"
+format: gfm
+---
+
+```{r}
+#| include: false
+source("./R/dgr-rct_power-simulation.R")
+```
+
+# Design and Data Structure
+
+The following sections provide brief descriptions of the data structures for the
+primary and secondary outcomes.
+
+## Primary Outcome (SOTIPS)
+
+The primary outcome will be measured at baseline, one months, six months, and
+twelve months.
+
+We argue that a 5 point reduction in SOTIPS score after 12 months as a function
+of the medication would be clinically meaningful. This corresponds to an average
+reduction of 0.42 points per month.
+
+The power simulations presented here are based on the following model.
+
+```{r}
+summary(design_lmm)
+```
+
+In this model, "measurement" refers to the amount of time spent (in months) in
+the trial. The coefficient of primary interest is the interaction term between
+time (measurement) and Degarelix.
+
+The variance components of this model are based on preliminary data from a
+different trial with a similar population of participants, adjusted to be
+slightly more conservative.
+
+# Power Simulation
+
+## Power to Detect Effects on the SOTIPS
+
+With the assumptions of the model described above, the following simulation
+estimates the statistical power for the effect of Degarelix over time.
+
+This simulation assumes *n* = 60 in the TAU arm and *n* = 120 in the treatment
+arm.
+
+```{r}
+power_simulation
+```
+
+If we recruit and retain the full planned sample, we will have statistical power
+approaching 100% to detect an effect in a magnitude we regard as clinically
+significant.
+
+## Accounting for Data/Power Loss
+
+We can also consider how much power we will have if there is a substantial
+attrition rate. The following simulation assumes the loss of 33% of the sample.
+
+```{r}
+power_simulation_33
+```
+
+If we have a dropout rate of 33% (equally across conditions), we will have
+approximately 80% power to detect a clinically significant effect. Lower dropout
+rates will yield higher levels of power. As such, attrition rates must be quite
+severe before the study becomes underpowered to detect relevant effects.
