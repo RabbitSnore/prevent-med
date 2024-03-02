@@ -72,7 +72,7 @@ sim_str <- sim_str %>%
 fixed_design <- c(
    0.00, # intercept
   -0.50, # Measurement, change per month 
-  -0.00, # PPDT, Placebo placebo, degaralix + TAU
+  -0.00, # PPDT, Placebo placebo, degarelix + TAU
   -0.00, # TPDT, Testosterone, placebo, degarelix + TAU
   -0.00, # EPDT, Placebo, Estradiol, degarelix + TAU
   -0.42, # PPDT x time, Placebo placebo, degarelix + TAU
