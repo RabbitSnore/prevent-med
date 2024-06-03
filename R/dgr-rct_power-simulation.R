@@ -145,20 +145,38 @@ sim_str_33$condition <- factor(sim_str_33$condition,
                                        "treat_tpdt", 
                                        "treat_epdt"))
 
+sim_str_33 <- sim_str_33 %>% 
+  mutate(
+    degarelix = case_when(
+      condition == "tau" ~ 0,
+      condition == "treat_ppdt" | condition == "treat_tpdt" | condition == "treat_epdt"  ~ 1
+    ),
+    testosterone = case_when(
+      condition == "tau" | condition == "treat_ppdt" | condition == "treat_epdt" ~ 0,
+      condition == "treat_tpdt" ~ 1
+    ),
+    estradiol = case_when(
+      condition == "tau" | condition == "treat_ppdt" | condition == "treat_tpdt" ~ 0,
+      condition == "treat_epdt" ~ 1
+    )
+  )
+
+
 ### Simulated model
 
 design_lmm_33 <- makeLmer(
   formula  = 
     sotips 
-    ~ 1 
-    + measurement
-    * condition
-    + (1|id),
-    fixef   = fixed_design,
-    VarCorr = varcor_design,
-    sigma   = sigma_design,
-    data    = sim_str_33
-  )
+  ~ 1 
+  + measurement * degarelix
+  + measurement * testosterone
+  + measurement * estradiol
+  + (1|id),
+  fixef   = fixed_design,
+  VarCorr = varcor_design,
+  sigma   = sigma_design,
+  data    = sim_str_33
+)
 
 ### Simulation
 
@@ -166,13 +184,13 @@ if (!file.exists("./output/dgr-rct_power-sim-33.rds")) {
   
   power_simulation_33 <- powerSim(
     fit = design_lmm_33,
-    test = fixed("measurement:conditiontreat_ppdt", method = "t"),
+    test = fixed("measurement:degarelix", method = "t"),
     nsim = 1000,
     seed = 8989
   )
- 
+  
   saveRDS(power_simulation_33, "./output/dgr-rct_power-sim-33.rds")
-   
+  
 } else {
   
   power_simulation_33 <- readRDS("./output/dgr-rct_power-sim-33.rds")
